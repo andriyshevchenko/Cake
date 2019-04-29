@@ -31,7 +31,7 @@ namespace console_test
                 listener.Bind(ipEndPoint);
                 listener.Listen(10000);
 
-                IHost host = new SingleThreaded(listener, new TestEnd(), new OpConsole());
+                IHost host = new SingleThreaded(listener, new TextSample(), new OpConsole());
 
                 while (true)
                 {

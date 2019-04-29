@@ -13,18 +13,18 @@
     {
         private ITextOutput output;
         private Socket transport;
-        private IEndpoint endpoint;
+        private IHub hub;
         private TaskCompletionSource<bool> task;
 
-        public SingleThreaded(Socket transport, IEndpoint endpoint) : this(transport, endpoint, new OpDebug())
+        public SingleThreaded(Socket transport, IHub hub) : this(transport, hub, new OpDebug())
         {
 
         }
 
-        public SingleThreaded(Socket transport, IEndpoint endpoint, ITextOutput output)
+        public SingleThreaded(Socket transport, IHub hub, ITextOutput output)
         {
             this.transport = transport;
-            this.endpoint = endpoint;
+            this.hub = hub;
             this.output = output;
         }
 
@@ -52,6 +52,7 @@
             try
             {
                 socketOp.Completed += SocketOp_Completed;
+                socketOp.SetBuffer(new byte[16384], 0, 16384);
                 transport.AcceptAsync(socketOp);
             }
             catch (System.Exception exc)
@@ -109,8 +110,7 @@
             try
             {
                 output.Write(new StrBr("Receiving...")).Wait();
-                IResponse response = await endpoint.Act(new TestRq()).ConfigureAwait(false);
-                byte[] bytes = Encoding.UTF8.GetBytes("A message from a server");
+                byte[] bytes = await hub.Act(e.Buffer).ConfigureAwait(false);
                 e.SetBuffer(bytes, e.Offset, bytes.Length);
                 if (!transport.SendAsync(e))
                 {
@@ -144,7 +144,7 @@
             {
                 output.Write(new StrBr("Accepted connection from")).Wait();
                 //refine SocketAsyncEventArgs before receive
-                e.SetBuffer(0, 16384);
+                //e.SetBuffer(0, 16384);
                 output.Write(new StrBr("Set buffer")).Wait();
                 if (!transport.ReceiveAsync(e))
                 {
