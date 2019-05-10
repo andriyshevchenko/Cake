@@ -1,7 +1,5 @@
 ﻿namespace Cakes.http
 {
-    using System.Diagnostics;
-    using System.Net.Sockets;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -9,6 +7,10 @@
     /// </summary>
     public interface IHost
     {
-        Task Accept(SocketAsyncEventArgs socket);
+        /// <summary>
+        /// Accept incoming network connection.
+        /// </summary>
+        /// <returns>A task that is completed when connection is succesfully accepted.</returns>
+        Task Accept();
     }
 }

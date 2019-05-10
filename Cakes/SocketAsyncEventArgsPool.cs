@@ -9,7 +9,7 @@
     {
         ConcurrentQueue<SocketAsyncEventArgs> queue;
 
-        public SocketAsyncEventArgsPool(Int32 capacity)
+        public SocketAsyncEventArgsPool(int capacity)
         {
             this.queue = new ConcurrentQueue<SocketAsyncEventArgs>();
         }

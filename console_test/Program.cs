@@ -11,6 +11,7 @@ namespace console_test
     class Program
     {
         public static ManualResetEvent waithandle = new ManualResetEvent(false);
+        public static SocketAsyncEventArgsPool allocatedArgs = new SocketAsyncEventArgsPool(64);
 
         async static Task Main(string[] args)
         {
@@ -35,15 +36,14 @@ namespace console_test
 
                 while (true)
                 {
-                    waithandle.Reset();
-                    SocketAsyncEventArgs result = new SocketAsyncEventArgs();
+                    waithandle.Reset(); 
 
-                    await host.Accept(result)
+                    await host.Accept()
                         .ContinueWith(task =>
                             {
                                 waithandle.Set();
                             },
-                            TaskContinuationOptions.OnlyOnRanToCompletion
+                            TaskContinuationOptions.DenyChildAttach
                         );
 
                     waithandle.WaitOne();

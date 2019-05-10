@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Appends \r\n to string
+    /// Appends "\r\n" to end of the string.
     /// </summary>
     public class StrBr : IText
     {
